@@ -6,7 +6,7 @@ struct packet {
     int* dstip;
 };
 
-vector_width 256;
+vector_width 128;
 
 for (i = 0; i < 128; i++) {
     vector ttl = decrement(packet[i].ttl, 1);
