@@ -1,0 +1,12 @@
+
+struct packet {
+    vector int ttl;
+    int* srcip;
+    int* dstip;
+};
+
+vector_width 8;
+
+for (i = 0; i < 128; i++) {
+    vector ttl = decrement(packet[i].ttl,1);
+}
