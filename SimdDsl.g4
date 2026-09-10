@@ -30,7 +30,7 @@ typeName
     : IDENTIFIER
     ;
 
-// vector_width 8;
+// vector_width 256;
 vectorWidthDeclaration
     : 'vector_width' INT ';'
     ;

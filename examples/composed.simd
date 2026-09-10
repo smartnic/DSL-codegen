@@ -1,12 +1,14 @@
 
 struct packet {
-    vector int ttl;
+    vector int32 ttl;
+    vector int8 random;
     int* srcip;
     int* dstip;
 };
 
-vector_width 8;
+vector_width 256;
 
 for (i = 0; i < 128; i++) {
-    vector ttl = decrement(packet[i].ttl,1);
+    vector ttl = decrement(packet[i].ttl, 1);
+    vector sum = add(packet[i].random, packet[i].random);
 }

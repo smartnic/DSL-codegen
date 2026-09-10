@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <string>
 
 #include "SimdDslBaseVisitor.h"
@@ -7,6 +8,8 @@
 class SimdDslCodeGenerator : public SimdDslBaseVisitor {
 public:
     std::any visitProgram(SimdDslParser::ProgramContext *ctx) override;
+    std::any visitStructDeclaration(
+        SimdDslParser::StructDeclarationContext *ctx) override;
     std::any visitVectorWidthDeclaration(
         SimdDslParser::VectorWidthDeclarationContext *ctx) override;
     std::any visitForStatement(SimdDslParser::ForStatementContext *ctx) override;
@@ -15,6 +18,7 @@ public:
     const std::string &code() const;
 
 private:
-    int lanes_ = 8;
+    int registerBits_ = 256;
+    std::map<std::string, int> fieldBits_;
     std::string code_;
 };
