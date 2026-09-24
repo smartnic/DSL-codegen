@@ -9,6 +9,8 @@ statement
     | vectorWidthDeclaration
     | declaration
     | assignment
+    | compoundAssignment
+    | updateStatement
     | callStatement
     | forStatement
     ;
@@ -36,13 +38,24 @@ vectorWidthDeclaration
     ;
 
 // vector ttl;
+// vector sum = a + b;
 declaration
-    : 'vector' IDENTIFIER ('=' call)? ';'
+    : 'vector' IDENTIFIER ('=' expression)? ';'
     ;
 
+// sum = a + b - c;
 assignment
-    : 'vector' IDENTIFIER '=' call ';'
-    | lvalue '=' call ';'
+    : lvalue '=' expression ';'
+    ;
+
+// ttl -= 1;   sum += x;
+compoundAssignment
+    : lvalue op=('+=' | '-=') expression ';'
+    ;
+
+// ttl--;
+updateStatement
+    : lvalue '--' ';'
     ;
 
 callStatement
@@ -63,6 +76,7 @@ condition
 
 loopUpdate
     : IDENTIFIER '++'
+    | IDENTIFIER '--'
     | IDENTIFIER '=' expression
     ;
 
@@ -82,9 +96,14 @@ arg
     : expression
     ;
 
+// Alternatives listed first bind tighter. '+' and '-' are left-associative.
 expression
-    : lvalue
-    | INT
+    : '(' expression ')'                        # ParenExpr
+    | lvalue op='--'                            # DecrementExpr
+    | expression op=('+' | '-') expression      # AddSubExpr
+    | call                                      # CallExpr
+    | lvalue                                    # LvalueExpr
+    | INT                                       # IntExpr
     ;
 
 lvalue

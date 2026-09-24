@@ -80,7 +80,12 @@ std::any SimdDslCodeGenerator::visitForStatement(
 std::any SimdDslCodeGenerator::visitDeclaration(
     SimdDslParser::DeclarationContext *ctx) {
     if (ctx->call() == nullptr) {
+      
+std::any SimdDslCodeGenerator::visitDeclaration(
+    SimdDslParser::DeclarationContext *ctx) {
+    if (ctx->call() == nullptr) {
         throw std::runtime_error("vector declarations require a supported primitive call");
+    }  throw std::runtime_error("vector declarations require a supported primitive call");
     }
 
     auto *arguments = ctx->call()->argList();
