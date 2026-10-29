@@ -4,8 +4,8 @@
 #include <stdexcept>
 
 #include "SimdDslCodeGenerator.h"
-#include "SimdDslLexer.h"
-#include "SimdDslParser.h"
+#include "../generated/SimdDslLexer.h"
+#include "../generated/SimdDslParser.h"
 
 using namespace antlr4;
 

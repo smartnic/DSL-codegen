@@ -43,23 +43,14 @@ public:
   virtual void enterAssignment(SimdDslParser::AssignmentContext * /*ctx*/) override { }
   virtual void exitAssignment(SimdDslParser::AssignmentContext * /*ctx*/) override { }
 
+  virtual void enterCompoundAssignment(SimdDslParser::CompoundAssignmentContext * /*ctx*/) override { }
+  virtual void exitCompoundAssignment(SimdDslParser::CompoundAssignmentContext * /*ctx*/) override { }
+
+  virtual void enterUpdateStatement(SimdDslParser::UpdateStatementContext * /*ctx*/) override { }
+  virtual void exitUpdateStatement(SimdDslParser::UpdateStatementContext * /*ctx*/) override { }
+
   virtual void enterCallStatement(SimdDslParser::CallStatementContext * /*ctx*/) override { }
   virtual void exitCallStatement(SimdDslParser::CallStatementContext * /*ctx*/) override { }
-
-  virtual void enterForStatement(SimdDslParser::ForStatementContext * /*ctx*/) override { }
-  virtual void exitForStatement(SimdDslParser::ForStatementContext * /*ctx*/) override { }
-
-  virtual void enterLoopInitializer(SimdDslParser::LoopInitializerContext * /*ctx*/) override { }
-  virtual void exitLoopInitializer(SimdDslParser::LoopInitializerContext * /*ctx*/) override { }
-
-  virtual void enterCondition(SimdDslParser::ConditionContext * /*ctx*/) override { }
-  virtual void exitCondition(SimdDslParser::ConditionContext * /*ctx*/) override { }
-
-  virtual void enterLoopUpdate(SimdDslParser::LoopUpdateContext * /*ctx*/) override { }
-  virtual void exitLoopUpdate(SimdDslParser::LoopUpdateContext * /*ctx*/) override { }
-
-  virtual void enterBlock(SimdDslParser::BlockContext * /*ctx*/) override { }
-  virtual void exitBlock(SimdDslParser::BlockContext * /*ctx*/) override { }
 
   virtual void enterCall(SimdDslParser::CallContext * /*ctx*/) override { }
   virtual void exitCall(SimdDslParser::CallContext * /*ctx*/) override { }
@@ -70,8 +61,23 @@ public:
   virtual void enterArg(SimdDslParser::ArgContext * /*ctx*/) override { }
   virtual void exitArg(SimdDslParser::ArgContext * /*ctx*/) override { }
 
-  virtual void enterExpression(SimdDslParser::ExpressionContext * /*ctx*/) override { }
-  virtual void exitExpression(SimdDslParser::ExpressionContext * /*ctx*/) override { }
+  virtual void enterLvalueExpr(SimdDslParser::LvalueExprContext * /*ctx*/) override { }
+  virtual void exitLvalueExpr(SimdDslParser::LvalueExprContext * /*ctx*/) override { }
+
+  virtual void enterCallExpr(SimdDslParser::CallExprContext * /*ctx*/) override { }
+  virtual void exitCallExpr(SimdDslParser::CallExprContext * /*ctx*/) override { }
+
+  virtual void enterIntExpr(SimdDslParser::IntExprContext * /*ctx*/) override { }
+  virtual void exitIntExpr(SimdDslParser::IntExprContext * /*ctx*/) override { }
+
+  virtual void enterParenExpr(SimdDslParser::ParenExprContext * /*ctx*/) override { }
+  virtual void exitParenExpr(SimdDslParser::ParenExprContext * /*ctx*/) override { }
+
+  virtual void enterAddSubExpr(SimdDslParser::AddSubExprContext * /*ctx*/) override { }
+  virtual void exitAddSubExpr(SimdDslParser::AddSubExprContext * /*ctx*/) override { }
+
+  virtual void enterDecrementExpr(SimdDslParser::DecrementExprContext * /*ctx*/) override { }
+  virtual void exitDecrementExpr(SimdDslParser::DecrementExprContext * /*ctx*/) override { }
 
   virtual void enterLvalue(SimdDslParser::LvalueContext * /*ctx*/) override { }
   virtual void exitLvalue(SimdDslParser::LvalueContext * /*ctx*/) override { }

@@ -1,18 +1,15 @@
 grammar SimdDsl;
 
 program
-    : statement* EOF
+    : structDeclaration vectorWidthDeclaration? statement* EOF
     ;
 
 statement
-    : structDeclaration
-    | vectorWidthDeclaration
-    | declaration
+    : declaration
     | assignment
     | compoundAssignment
     | updateStatement
     | callStatement
-    | forStatement
     ;
 
 structDeclaration
@@ -32,7 +29,7 @@ typeName
     : IDENTIFIER
     ;
 
-// vector_width 256;
+// Optional target register width. The default is 256 bits (AVX2).
 vectorWidthDeclaration
     : 'vector_width' INT ';'
     ;
@@ -43,45 +40,23 @@ declaration
     : 'vector' IDENTIFIER ('=' expression)? ';'
     ;
 
-// sum = a + b - c;
+// packet.ttl = packet.ttl - 1;
 assignment
     : lvalue '=' expression ';'
     ;
 
-// ttl -= 1;   sum += x;
+// packet.ttl -= 1;
 compoundAssignment
     : lvalue op=('+=' | '-=') expression ';'
     ;
 
-// ttl--;
+// packet.ttl--;
 updateStatement
     : lvalue '--' ';'
     ;
 
 callStatement
     : call ';'
-    ;
-
-forStatement
-    : 'for' '(' loopInitializer ';' condition ';' loopUpdate ')' block
-    ;
-
-loopInitializer
-    : IDENTIFIER '=' expression
-    ;
-
-condition
-    : IDENTIFIER ('<' | '<=' | '>' | '>=') expression
-    ;
-
-loopUpdate
-    : IDENTIFIER '++'
-    | IDENTIFIER '--'
-    | IDENTIFIER '=' expression
-    ;
-
-block
-    : '{' statement* '}'
     ;
 
 call
@@ -96,7 +71,6 @@ arg
     : expression
     ;
 
-// Alternatives listed first bind tighter. '+' and '-' are left-associative.
 expression
     : '(' expression ')'                        # ParenExpr
     | lvalue op='--'                            # DecrementExpr
@@ -107,7 +81,7 @@ expression
     ;
 
 lvalue
-    : IDENTIFIER ('.' IDENTIFIER | '[' expression ']')*
+    : IDENTIFIER '.' IDENTIFIER
     ;
 
 IDENTIFIER   : [a-zA-Z_][a-zA-Z_0-9]* ;

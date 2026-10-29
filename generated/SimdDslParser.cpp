@@ -55,75 +55,67 @@ void simddslParserInitialize() {
     std::vector<std::string>{
       "program", "statement", "structDeclaration", "fieldDeclaration", "vectorType", 
       "typeName", "vectorWidthDeclaration", "declaration", "assignment", 
-      "callStatement", "forStatement", "loopInitializer", "condition", "loopUpdate", 
-      "block", "call", "argList", "arg", "expression", "lvalue"
+      "compoundAssignment", "updateStatement", "callStatement", "call", 
+      "argList", "arg", "expression", "lvalue"
     },
     std::vector<std::string>{
       "", "'struct'", "'{'", "'}'", "';'", "'*'", "'vector'", "'vector_width'", 
-      "'='", "'for'", "'('", "')'", "'<'", "'<='", "'>'", "'>='", "'++'", 
-      "','", "'.'", "'['", "']'"
+      "'='", "'+='", "'-='", "'--'", "'('", "')'", "','", "'+'", "'-'", 
+      "'.'"
     },
     std::vector<std::string>{
       "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 
-      "", "", "", "", "IDENTIFIER", "INT", "WS", "LINE_COMMENT"
+      "", "IDENTIFIER", "INT", "WS", "LINE_COMMENT"
     }
   );
   static const int32_t serializedATNSegment[] = {
-  	4,1,24,183,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
+  	4,1,21,156,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,
   	7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,
-  	14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,1,0,5,0,42,8,0,10,
-  	0,12,0,45,9,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,3,1,55,8,1,1,2,1,2,1,2,
-  	1,2,5,2,61,8,2,10,2,12,2,64,9,2,1,2,1,2,3,2,68,8,2,1,3,1,3,1,3,1,3,1,
-  	3,1,3,3,3,76,8,3,1,3,1,3,1,3,3,3,81,8,3,1,4,1,4,1,4,1,5,1,5,1,6,1,6,1,
-  	6,1,6,1,7,1,7,1,7,1,7,3,7,96,8,7,1,7,1,7,1,8,1,8,1,8,1,8,1,8,1,8,1,8,
-  	1,8,1,8,1,8,1,8,3,8,111,8,8,1,9,1,9,1,9,1,10,1,10,1,10,1,10,1,10,1,10,
-  	1,10,1,10,1,10,1,10,1,11,1,11,1,11,1,11,1,12,1,12,1,12,1,12,1,13,1,13,
-  	1,13,1,13,1,13,3,13,139,8,13,1,14,1,14,5,14,143,8,14,10,14,12,14,146,
-  	9,14,1,14,1,14,1,15,1,15,1,15,3,15,153,8,15,1,15,1,15,1,16,1,16,1,16,
-  	5,16,160,8,16,10,16,12,16,163,9,16,1,17,1,17,1,18,1,18,3,18,169,8,18,
-  	1,19,1,19,1,19,1,19,1,19,1,19,1,19,5,19,178,8,19,10,19,12,19,181,9,19,
-  	1,19,0,0,20,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,0,
-  	1,1,0,12,15,181,0,43,1,0,0,0,2,54,1,0,0,0,4,56,1,0,0,0,6,80,1,0,0,0,8,
-  	82,1,0,0,0,10,85,1,0,0,0,12,87,1,0,0,0,14,91,1,0,0,0,16,110,1,0,0,0,18,
-  	112,1,0,0,0,20,115,1,0,0,0,22,125,1,0,0,0,24,129,1,0,0,0,26,138,1,0,0,
-  	0,28,140,1,0,0,0,30,149,1,0,0,0,32,156,1,0,0,0,34,164,1,0,0,0,36,168,
-  	1,0,0,0,38,170,1,0,0,0,40,42,3,2,1,0,41,40,1,0,0,0,42,45,1,0,0,0,43,41,
-  	1,0,0,0,43,44,1,0,0,0,44,46,1,0,0,0,45,43,1,0,0,0,46,47,5,0,0,1,47,1,
-  	1,0,0,0,48,55,3,4,2,0,49,55,3,12,6,0,50,55,3,14,7,0,51,55,3,16,8,0,52,
-  	55,3,18,9,0,53,55,3,20,10,0,54,48,1,0,0,0,54,49,1,0,0,0,54,50,1,0,0,0,
-  	54,51,1,0,0,0,54,52,1,0,0,0,54,53,1,0,0,0,55,3,1,0,0,0,56,57,5,1,0,0,
-  	57,58,5,21,0,0,58,62,5,2,0,0,59,61,3,6,3,0,60,59,1,0,0,0,61,64,1,0,0,
-  	0,62,60,1,0,0,0,62,63,1,0,0,0,63,65,1,0,0,0,64,62,1,0,0,0,65,67,5,3,0,
-  	0,66,68,5,4,0,0,67,66,1,0,0,0,67,68,1,0,0,0,68,5,1,0,0,0,69,70,3,8,4,
-  	0,70,71,5,21,0,0,71,72,5,4,0,0,72,81,1,0,0,0,73,75,3,10,5,0,74,76,5,5,
-  	0,0,75,74,1,0,0,0,75,76,1,0,0,0,76,77,1,0,0,0,77,78,5,21,0,0,78,79,5,
-  	4,0,0,79,81,1,0,0,0,80,69,1,0,0,0,80,73,1,0,0,0,81,7,1,0,0,0,82,83,5,
-  	6,0,0,83,84,3,10,5,0,84,9,1,0,0,0,85,86,5,21,0,0,86,11,1,0,0,0,87,88,
-  	5,7,0,0,88,89,5,22,0,0,89,90,5,4,0,0,90,13,1,0,0,0,91,92,5,6,0,0,92,95,
-  	5,21,0,0,93,94,5,8,0,0,94,96,3,30,15,0,95,93,1,0,0,0,95,96,1,0,0,0,96,
-  	97,1,0,0,0,97,98,5,4,0,0,98,15,1,0,0,0,99,100,5,6,0,0,100,101,5,21,0,
-  	0,101,102,5,8,0,0,102,103,3,30,15,0,103,104,5,4,0,0,104,111,1,0,0,0,105,
-  	106,3,38,19,0,106,107,5,8,0,0,107,108,3,30,15,0,108,109,5,4,0,0,109,111,
-  	1,0,0,0,110,99,1,0,0,0,110,105,1,0,0,0,111,17,1,0,0,0,112,113,3,30,15,
-  	0,113,114,5,4,0,0,114,19,1,0,0,0,115,116,5,9,0,0,116,117,5,10,0,0,117,
-  	118,3,22,11,0,118,119,5,4,0,0,119,120,3,24,12,0,120,121,5,4,0,0,121,122,
-  	3,26,13,0,122,123,5,11,0,0,123,124,3,28,14,0,124,21,1,0,0,0,125,126,5,
-  	21,0,0,126,127,5,8,0,0,127,128,3,36,18,0,128,23,1,0,0,0,129,130,5,21,
-  	0,0,130,131,7,0,0,0,131,132,3,36,18,0,132,25,1,0,0,0,133,134,5,21,0,0,
-  	134,139,5,16,0,0,135,136,5,21,0,0,136,137,5,8,0,0,137,139,3,36,18,0,138,
-  	133,1,0,0,0,138,135,1,0,0,0,139,27,1,0,0,0,140,144,5,2,0,0,141,143,3,
-  	2,1,0,142,141,1,0,0,0,143,146,1,0,0,0,144,142,1,0,0,0,144,145,1,0,0,0,
-  	145,147,1,0,0,0,146,144,1,0,0,0,147,148,5,3,0,0,148,29,1,0,0,0,149,150,
-  	5,21,0,0,150,152,5,10,0,0,151,153,3,32,16,0,152,151,1,0,0,0,152,153,1,
-  	0,0,0,153,154,1,0,0,0,154,155,5,11,0,0,155,31,1,0,0,0,156,161,3,34,17,
-  	0,157,158,5,17,0,0,158,160,3,34,17,0,159,157,1,0,0,0,160,163,1,0,0,0,
-  	161,159,1,0,0,0,161,162,1,0,0,0,162,33,1,0,0,0,163,161,1,0,0,0,164,165,
-  	3,36,18,0,165,35,1,0,0,0,166,169,3,38,19,0,167,169,5,22,0,0,168,166,1,
-  	0,0,0,168,167,1,0,0,0,169,37,1,0,0,0,170,179,5,21,0,0,171,172,5,18,0,
-  	0,172,178,5,21,0,0,173,174,5,19,0,0,174,175,3,36,18,0,175,176,5,20,0,
-  	0,176,178,1,0,0,0,177,171,1,0,0,0,177,173,1,0,0,0,178,181,1,0,0,0,179,
-  	177,1,0,0,0,179,180,1,0,0,0,180,39,1,0,0,0,181,179,1,0,0,0,15,43,54,62,
-  	67,75,80,95,110,138,144,152,161,168,177,179
+  	14,2,15,7,15,2,16,7,16,1,0,1,0,3,0,37,8,0,1,0,5,0,40,8,0,10,0,12,0,43,
+  	9,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,3,1,52,8,1,1,2,1,2,1,2,1,2,5,2,58,8,2,
+  	10,2,12,2,61,9,2,1,2,1,2,3,2,65,8,2,1,3,1,3,1,3,1,3,1,3,1,3,3,3,73,8,
+  	3,1,3,1,3,1,3,3,3,78,8,3,1,4,1,4,1,4,1,5,1,5,1,6,1,6,1,6,1,6,1,7,1,7,
+  	1,7,1,7,3,7,93,8,7,1,7,1,7,1,8,1,8,1,8,1,8,1,8,1,9,1,9,1,9,1,9,1,9,1,
+  	10,1,10,1,10,1,10,1,11,1,11,1,11,1,12,1,12,1,12,3,12,117,8,12,1,12,1,
+  	12,1,13,1,13,1,13,5,13,124,8,13,10,13,12,13,127,9,13,1,14,1,14,1,15,1,
+  	15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,1,15,3,15,142,8,15,1,15,1,
+  	15,1,15,5,15,147,8,15,10,15,12,15,150,9,15,1,16,1,16,1,16,1,16,1,16,0,
+  	1,30,17,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,0,2,1,0,9,10,1,
+  	0,15,16,156,0,34,1,0,0,0,2,51,1,0,0,0,4,53,1,0,0,0,6,77,1,0,0,0,8,79,
+  	1,0,0,0,10,82,1,0,0,0,12,84,1,0,0,0,14,88,1,0,0,0,16,96,1,0,0,0,18,101,
+  	1,0,0,0,20,106,1,0,0,0,22,110,1,0,0,0,24,113,1,0,0,0,26,120,1,0,0,0,28,
+  	128,1,0,0,0,30,141,1,0,0,0,32,151,1,0,0,0,34,36,3,4,2,0,35,37,3,12,6,
+  	0,36,35,1,0,0,0,36,37,1,0,0,0,37,41,1,0,0,0,38,40,3,2,1,0,39,38,1,0,0,
+  	0,40,43,1,0,0,0,41,39,1,0,0,0,41,42,1,0,0,0,42,44,1,0,0,0,43,41,1,0,0,
+  	0,44,45,5,0,0,1,45,1,1,0,0,0,46,52,3,14,7,0,47,52,3,16,8,0,48,52,3,18,
+  	9,0,49,52,3,20,10,0,50,52,3,22,11,0,51,46,1,0,0,0,51,47,1,0,0,0,51,48,
+  	1,0,0,0,51,49,1,0,0,0,51,50,1,0,0,0,52,3,1,0,0,0,53,54,5,1,0,0,54,55,
+  	5,18,0,0,55,59,5,2,0,0,56,58,3,6,3,0,57,56,1,0,0,0,58,61,1,0,0,0,59,57,
+  	1,0,0,0,59,60,1,0,0,0,60,62,1,0,0,0,61,59,1,0,0,0,62,64,5,3,0,0,63,65,
+  	5,4,0,0,64,63,1,0,0,0,64,65,1,0,0,0,65,5,1,0,0,0,66,67,3,8,4,0,67,68,
+  	5,18,0,0,68,69,5,4,0,0,69,78,1,0,0,0,70,72,3,10,5,0,71,73,5,5,0,0,72,
+  	71,1,0,0,0,72,73,1,0,0,0,73,74,1,0,0,0,74,75,5,18,0,0,75,76,5,4,0,0,76,
+  	78,1,0,0,0,77,66,1,0,0,0,77,70,1,0,0,0,78,7,1,0,0,0,79,80,5,6,0,0,80,
+  	81,3,10,5,0,81,9,1,0,0,0,82,83,5,18,0,0,83,11,1,0,0,0,84,85,5,7,0,0,85,
+  	86,5,19,0,0,86,87,5,4,0,0,87,13,1,0,0,0,88,89,5,6,0,0,89,92,5,18,0,0,
+  	90,91,5,8,0,0,91,93,3,30,15,0,92,90,1,0,0,0,92,93,1,0,0,0,93,94,1,0,0,
+  	0,94,95,5,4,0,0,95,15,1,0,0,0,96,97,3,32,16,0,97,98,5,8,0,0,98,99,3,30,
+  	15,0,99,100,5,4,0,0,100,17,1,0,0,0,101,102,3,32,16,0,102,103,7,0,0,0,
+  	103,104,3,30,15,0,104,105,5,4,0,0,105,19,1,0,0,0,106,107,3,32,16,0,107,
+  	108,5,11,0,0,108,109,5,4,0,0,109,21,1,0,0,0,110,111,3,24,12,0,111,112,
+  	5,4,0,0,112,23,1,0,0,0,113,114,5,18,0,0,114,116,5,12,0,0,115,117,3,26,
+  	13,0,116,115,1,0,0,0,116,117,1,0,0,0,117,118,1,0,0,0,118,119,5,13,0,0,
+  	119,25,1,0,0,0,120,125,3,28,14,0,121,122,5,14,0,0,122,124,3,28,14,0,123,
+  	121,1,0,0,0,124,127,1,0,0,0,125,123,1,0,0,0,125,126,1,0,0,0,126,27,1,
+  	0,0,0,127,125,1,0,0,0,128,129,3,30,15,0,129,29,1,0,0,0,130,131,6,15,-1,
+  	0,131,132,5,12,0,0,132,133,3,30,15,0,133,134,5,13,0,0,134,142,1,0,0,0,
+  	135,136,3,32,16,0,136,137,5,11,0,0,137,142,1,0,0,0,138,142,3,24,12,0,
+  	139,142,3,32,16,0,140,142,5,19,0,0,141,130,1,0,0,0,141,135,1,0,0,0,141,
+  	138,1,0,0,0,141,139,1,0,0,0,141,140,1,0,0,0,142,148,1,0,0,0,143,144,10,
+  	4,0,0,144,145,7,1,0,0,145,147,3,30,15,5,146,143,1,0,0,0,147,150,1,0,0,
+  	0,148,146,1,0,0,0,148,149,1,0,0,0,149,31,1,0,0,0,150,148,1,0,0,0,151,
+  	152,5,18,0,0,152,153,5,17,0,0,153,154,5,18,0,0,154,33,1,0,0,0,12,36,41,
+  	51,59,64,72,77,92,116,125,141,148
   };
   staticData->serializedATN = antlr4::atn::SerializedATNView(serializedATNSegment, sizeof(serializedATNSegment) / sizeof(serializedATNSegment[0]));
 
@@ -178,8 +170,16 @@ SimdDslParser::ProgramContext::ProgramContext(ParserRuleContext *parent, size_t 
   : ParserRuleContext(parent, invokingState) {
 }
 
+SimdDslParser::StructDeclarationContext* SimdDslParser::ProgramContext::structDeclaration() {
+  return getRuleContext<SimdDslParser::StructDeclarationContext>(0);
+}
+
 tree::TerminalNode* SimdDslParser::ProgramContext::EOF() {
   return getToken(SimdDslParser::EOF, 0);
+}
+
+SimdDslParser::VectorWidthDeclarationContext* SimdDslParser::ProgramContext::vectorWidthDeclaration() {
+  return getRuleContext<SimdDslParser::VectorWidthDeclarationContext>(0);
 }
 
 std::vector<SimdDslParser::StatementContext *> SimdDslParser::ProgramContext::statement() {
@@ -229,18 +229,29 @@ SimdDslParser::ProgramContext* SimdDslParser::program() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(43);
+    setState(34);
+    structDeclaration();
+    setState(36);
+    _errHandler->sync(this);
+
+    _la = _input->LA(1);
+    if (_la == SimdDslParser::T__6) {
+      setState(35);
+      vectorWidthDeclaration();
+    }
+    setState(41);
     _errHandler->sync(this);
     _la = _input->LA(1);
-    while ((((_la & ~ 0x3fULL) == 0) &&
-      ((1ULL << _la) & 2097858) != 0)) {
-      setState(40);
+    while (_la == SimdDslParser::T__5
+
+    || _la == SimdDslParser::IDENTIFIER) {
+      setState(38);
       statement();
-      setState(45);
+      setState(43);
       _errHandler->sync(this);
       _la = _input->LA(1);
     }
-    setState(46);
+    setState(44);
     match(SimdDslParser::EOF);
    
   }
@@ -259,14 +270,6 @@ SimdDslParser::StatementContext::StatementContext(ParserRuleContext *parent, siz
   : ParserRuleContext(parent, invokingState) {
 }
 
-SimdDslParser::StructDeclarationContext* SimdDslParser::StatementContext::structDeclaration() {
-  return getRuleContext<SimdDslParser::StructDeclarationContext>(0);
-}
-
-SimdDslParser::VectorWidthDeclarationContext* SimdDslParser::StatementContext::vectorWidthDeclaration() {
-  return getRuleContext<SimdDslParser::VectorWidthDeclarationContext>(0);
-}
-
 SimdDslParser::DeclarationContext* SimdDslParser::StatementContext::declaration() {
   return getRuleContext<SimdDslParser::DeclarationContext>(0);
 }
@@ -275,12 +278,16 @@ SimdDslParser::AssignmentContext* SimdDslParser::StatementContext::assignment() 
   return getRuleContext<SimdDslParser::AssignmentContext>(0);
 }
 
-SimdDslParser::CallStatementContext* SimdDslParser::StatementContext::callStatement() {
-  return getRuleContext<SimdDslParser::CallStatementContext>(0);
+SimdDslParser::CompoundAssignmentContext* SimdDslParser::StatementContext::compoundAssignment() {
+  return getRuleContext<SimdDslParser::CompoundAssignmentContext>(0);
 }
 
-SimdDslParser::ForStatementContext* SimdDslParser::StatementContext::forStatement() {
-  return getRuleContext<SimdDslParser::ForStatementContext>(0);
+SimdDslParser::UpdateStatementContext* SimdDslParser::StatementContext::updateStatement() {
+  return getRuleContext<SimdDslParser::UpdateStatementContext>(0);
+}
+
+SimdDslParser::CallStatementContext* SimdDslParser::StatementContext::callStatement() {
+  return getRuleContext<SimdDslParser::CallStatementContext>(0);
 }
 
 
@@ -320,48 +327,41 @@ SimdDslParser::StatementContext* SimdDslParser::statement() {
     exitRule();
   });
   try {
-    setState(54);
+    setState(51);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 1, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(48);
-      structDeclaration();
+      setState(46);
+      declaration();
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(49);
-      vectorWidthDeclaration();
+      setState(47);
+      assignment();
       break;
     }
 
     case 3: {
       enterOuterAlt(_localctx, 3);
-      setState(50);
-      declaration();
+      setState(48);
+      compoundAssignment();
       break;
     }
 
     case 4: {
       enterOuterAlt(_localctx, 4);
-      setState(51);
-      assignment();
+      setState(49);
+      updateStatement();
       break;
     }
 
     case 5: {
       enterOuterAlt(_localctx, 5);
-      setState(52);
+      setState(50);
       callStatement();
-      break;
-    }
-
-    case 6: {
-      enterOuterAlt(_localctx, 6);
-      setState(53);
-      forStatement();
       break;
     }
 
@@ -436,32 +436,32 @@ SimdDslParser::StructDeclarationContext* SimdDslParser::structDeclaration() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(56);
+    setState(53);
     match(SimdDslParser::T__0);
-    setState(57);
+    setState(54);
     match(SimdDslParser::IDENTIFIER);
-    setState(58);
+    setState(55);
     match(SimdDslParser::T__1);
-    setState(62);
+    setState(59);
     _errHandler->sync(this);
     _la = _input->LA(1);
     while (_la == SimdDslParser::T__5
 
     || _la == SimdDslParser::IDENTIFIER) {
-      setState(59);
+      setState(56);
       fieldDeclaration();
-      setState(64);
+      setState(61);
       _errHandler->sync(this);
       _la = _input->LA(1);
     }
-    setState(65);
+    setState(62);
     match(SimdDslParser::T__2);
-    setState(67);
+    setState(64);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == SimdDslParser::T__3) {
-      setState(66);
+      setState(63);
       match(SimdDslParser::T__3);
     }
    
@@ -531,35 +531,35 @@ SimdDslParser::FieldDeclarationContext* SimdDslParser::fieldDeclaration() {
     exitRule();
   });
   try {
-    setState(80);
+    setState(77);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case SimdDslParser::T__5: {
         enterOuterAlt(_localctx, 1);
-        setState(69);
+        setState(66);
         vectorType();
-        setState(70);
+        setState(67);
         match(SimdDslParser::IDENTIFIER);
-        setState(71);
+        setState(68);
         match(SimdDslParser::T__3);
         break;
       }
 
       case SimdDslParser::IDENTIFIER: {
         enterOuterAlt(_localctx, 2);
-        setState(73);
+        setState(70);
         typeName();
-        setState(75);
+        setState(72);
         _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == SimdDslParser::T__4) {
-          setState(74);
+          setState(71);
           match(SimdDslParser::T__4);
         }
-        setState(77);
+        setState(74);
         match(SimdDslParser::IDENTIFIER);
-        setState(78);
+        setState(75);
         match(SimdDslParser::T__3);
         break;
       }
@@ -626,9 +626,9 @@ SimdDslParser::VectorTypeContext* SimdDslParser::vectorType() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(82);
+    setState(79);
     match(SimdDslParser::T__5);
-    setState(83);
+    setState(80);
     typeName();
    
   }
@@ -689,7 +689,7 @@ SimdDslParser::TypeNameContext* SimdDslParser::typeName() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(85);
+    setState(82);
     match(SimdDslParser::IDENTIFIER);
    
   }
@@ -750,11 +750,11 @@ SimdDslParser::VectorWidthDeclarationContext* SimdDslParser::vectorWidthDeclarat
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(87);
+    setState(84);
     match(SimdDslParser::T__6);
-    setState(88);
+    setState(85);
     match(SimdDslParser::INT);
-    setState(89);
+    setState(86);
     match(SimdDslParser::T__3);
    
   }
@@ -777,8 +777,8 @@ tree::TerminalNode* SimdDslParser::DeclarationContext::IDENTIFIER() {
   return getToken(SimdDslParser::IDENTIFIER, 0);
 }
 
-SimdDslParser::CallContext* SimdDslParser::DeclarationContext::call() {
-  return getRuleContext<SimdDslParser::CallContext>(0);
+SimdDslParser::ExpressionContext* SimdDslParser::DeclarationContext::expression() {
+  return getRuleContext<SimdDslParser::ExpressionContext>(0);
 }
 
 
@@ -820,21 +820,21 @@ SimdDslParser::DeclarationContext* SimdDslParser::declaration() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(91);
+    setState(88);
     match(SimdDslParser::T__5);
-    setState(92);
+    setState(89);
     match(SimdDslParser::IDENTIFIER);
-    setState(95);
+    setState(92);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == SimdDslParser::T__7) {
-      setState(93);
+      setState(90);
       match(SimdDslParser::T__7);
-      setState(94);
-      call();
+      setState(91);
+      expression(0);
     }
-    setState(97);
+    setState(94);
     match(SimdDslParser::T__3);
    
   }
@@ -853,16 +853,12 @@ SimdDslParser::AssignmentContext::AssignmentContext(ParserRuleContext *parent, s
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* SimdDslParser::AssignmentContext::IDENTIFIER() {
-  return getToken(SimdDslParser::IDENTIFIER, 0);
-}
-
-SimdDslParser::CallContext* SimdDslParser::AssignmentContext::call() {
-  return getRuleContext<SimdDslParser::CallContext>(0);
-}
-
 SimdDslParser::LvalueContext* SimdDslParser::AssignmentContext::lvalue() {
   return getRuleContext<SimdDslParser::LvalueContext>(0);
+}
+
+SimdDslParser::ExpressionContext* SimdDslParser::AssignmentContext::expression() {
+  return getRuleContext<SimdDslParser::ExpressionContext>(0);
 }
 
 
@@ -902,40 +898,162 @@ SimdDslParser::AssignmentContext* SimdDslParser::assignment() {
     exitRule();
   });
   try {
-    setState(110);
-    _errHandler->sync(this);
-    switch (_input->LA(1)) {
-      case SimdDslParser::T__5: {
-        enterOuterAlt(_localctx, 1);
-        setState(99);
-        match(SimdDslParser::T__5);
-        setState(100);
-        match(SimdDslParser::IDENTIFIER);
-        setState(101);
-        match(SimdDslParser::T__7);
-        setState(102);
-        call();
-        setState(103);
-        match(SimdDslParser::T__3);
-        break;
-      }
+    enterOuterAlt(_localctx, 1);
+    setState(96);
+    lvalue();
+    setState(97);
+    match(SimdDslParser::T__7);
+    setState(98);
+    expression(0);
+    setState(99);
+    match(SimdDslParser::T__3);
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
 
-      case SimdDslParser::IDENTIFIER: {
-        enterOuterAlt(_localctx, 2);
-        setState(105);
-        lvalue();
-        setState(106);
-        match(SimdDslParser::T__7);
-        setState(107);
-        call();
-        setState(108);
-        match(SimdDslParser::T__3);
-        break;
-      }
+  return _localctx;
+}
 
-    default:
-      throw NoViableAltException(this);
+//----------------- CompoundAssignmentContext ------------------------------------------------------------------
+
+SimdDslParser::CompoundAssignmentContext::CompoundAssignmentContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+SimdDslParser::LvalueContext* SimdDslParser::CompoundAssignmentContext::lvalue() {
+  return getRuleContext<SimdDslParser::LvalueContext>(0);
+}
+
+SimdDslParser::ExpressionContext* SimdDslParser::CompoundAssignmentContext::expression() {
+  return getRuleContext<SimdDslParser::ExpressionContext>(0);
+}
+
+
+size_t SimdDslParser::CompoundAssignmentContext::getRuleIndex() const {
+  return SimdDslParser::RuleCompoundAssignment;
+}
+
+void SimdDslParser::CompoundAssignmentContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterCompoundAssignment(this);
+}
+
+void SimdDslParser::CompoundAssignmentContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitCompoundAssignment(this);
+}
+
+
+std::any SimdDslParser::CompoundAssignmentContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
+    return parserVisitor->visitCompoundAssignment(this);
+  else
+    return visitor->visitChildren(this);
+}
+
+SimdDslParser::CompoundAssignmentContext* SimdDslParser::compoundAssignment() {
+  CompoundAssignmentContext *_localctx = _tracker.createInstance<CompoundAssignmentContext>(_ctx, getState());
+  enterRule(_localctx, 18, SimdDslParser::RuleCompoundAssignment);
+  size_t _la = 0;
+
+#if __cplusplus > 201703L
+  auto onExit = finally([=, this] {
+#else
+  auto onExit = finally([=] {
+#endif
+    exitRule();
+  });
+  try {
+    enterOuterAlt(_localctx, 1);
+    setState(101);
+    lvalue();
+    setState(102);
+    antlrcpp::downCast<CompoundAssignmentContext *>(_localctx)->op = _input->LT(1);
+    _la = _input->LA(1);
+    if (!(_la == SimdDslParser::T__8
+
+    || _la == SimdDslParser::T__9)) {
+      antlrcpp::downCast<CompoundAssignmentContext *>(_localctx)->op = _errHandler->recoverInline(this);
     }
+    else {
+      _errHandler->reportMatch(this);
+      consume();
+    }
+    setState(103);
+    expression(0);
+    setState(104);
+    match(SimdDslParser::T__3);
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
+
+  return _localctx;
+}
+
+//----------------- UpdateStatementContext ------------------------------------------------------------------
+
+SimdDslParser::UpdateStatementContext::UpdateStatementContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+SimdDslParser::LvalueContext* SimdDslParser::UpdateStatementContext::lvalue() {
+  return getRuleContext<SimdDslParser::LvalueContext>(0);
+}
+
+
+size_t SimdDslParser::UpdateStatementContext::getRuleIndex() const {
+  return SimdDslParser::RuleUpdateStatement;
+}
+
+void SimdDslParser::UpdateStatementContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterUpdateStatement(this);
+}
+
+void SimdDslParser::UpdateStatementContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitUpdateStatement(this);
+}
+
+
+std::any SimdDslParser::UpdateStatementContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
+    return parserVisitor->visitUpdateStatement(this);
+  else
+    return visitor->visitChildren(this);
+}
+
+SimdDslParser::UpdateStatementContext* SimdDslParser::updateStatement() {
+  UpdateStatementContext *_localctx = _tracker.createInstance<UpdateStatementContext>(_ctx, getState());
+  enterRule(_localctx, 20, SimdDslParser::RuleUpdateStatement);
+
+#if __cplusplus > 201703L
+  auto onExit = finally([=, this] {
+#else
+  auto onExit = finally([=] {
+#endif
+    exitRule();
+  });
+  try {
+    enterOuterAlt(_localctx, 1);
+    setState(106);
+    lvalue();
+    setState(107);
+    match(SimdDslParser::T__10);
+    setState(108);
+    match(SimdDslParser::T__3);
    
   }
   catch (RecognitionException &e) {
@@ -984,7 +1102,7 @@ std::any SimdDslParser::CallStatementContext::accept(tree::ParseTreeVisitor *vis
 
 SimdDslParser::CallStatementContext* SimdDslParser::callStatement() {
   CallStatementContext *_localctx = _tracker.createInstance<CallStatementContext>(_ctx, getState());
-  enterRule(_localctx, 18, SimdDslParser::RuleCallStatement);
+  enterRule(_localctx, 22, SimdDslParser::RuleCallStatement);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -995,413 +1113,10 @@ SimdDslParser::CallStatementContext* SimdDslParser::callStatement() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(112);
+    setState(110);
     call();
-    setState(113);
+    setState(111);
     match(SimdDslParser::T__3);
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- ForStatementContext ------------------------------------------------------------------
-
-SimdDslParser::ForStatementContext::ForStatementContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-SimdDslParser::LoopInitializerContext* SimdDslParser::ForStatementContext::loopInitializer() {
-  return getRuleContext<SimdDslParser::LoopInitializerContext>(0);
-}
-
-SimdDslParser::ConditionContext* SimdDslParser::ForStatementContext::condition() {
-  return getRuleContext<SimdDslParser::ConditionContext>(0);
-}
-
-SimdDslParser::LoopUpdateContext* SimdDslParser::ForStatementContext::loopUpdate() {
-  return getRuleContext<SimdDslParser::LoopUpdateContext>(0);
-}
-
-SimdDslParser::BlockContext* SimdDslParser::ForStatementContext::block() {
-  return getRuleContext<SimdDslParser::BlockContext>(0);
-}
-
-
-size_t SimdDslParser::ForStatementContext::getRuleIndex() const {
-  return SimdDslParser::RuleForStatement;
-}
-
-void SimdDslParser::ForStatementContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterForStatement(this);
-}
-
-void SimdDslParser::ForStatementContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitForStatement(this);
-}
-
-
-std::any SimdDslParser::ForStatementContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
-    return parserVisitor->visitForStatement(this);
-  else
-    return visitor->visitChildren(this);
-}
-
-SimdDslParser::ForStatementContext* SimdDslParser::forStatement() {
-  ForStatementContext *_localctx = _tracker.createInstance<ForStatementContext>(_ctx, getState());
-  enterRule(_localctx, 20, SimdDslParser::RuleForStatement);
-
-#if __cplusplus > 201703L
-  auto onExit = finally([=, this] {
-#else
-  auto onExit = finally([=] {
-#endif
-    exitRule();
-  });
-  try {
-    enterOuterAlt(_localctx, 1);
-    setState(115);
-    match(SimdDslParser::T__8);
-    setState(116);
-    match(SimdDslParser::T__9);
-    setState(117);
-    loopInitializer();
-    setState(118);
-    match(SimdDslParser::T__3);
-    setState(119);
-    condition();
-    setState(120);
-    match(SimdDslParser::T__3);
-    setState(121);
-    loopUpdate();
-    setState(122);
-    match(SimdDslParser::T__10);
-    setState(123);
-    block();
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- LoopInitializerContext ------------------------------------------------------------------
-
-SimdDslParser::LoopInitializerContext::LoopInitializerContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-tree::TerminalNode* SimdDslParser::LoopInitializerContext::IDENTIFIER() {
-  return getToken(SimdDslParser::IDENTIFIER, 0);
-}
-
-SimdDslParser::ExpressionContext* SimdDslParser::LoopInitializerContext::expression() {
-  return getRuleContext<SimdDslParser::ExpressionContext>(0);
-}
-
-
-size_t SimdDslParser::LoopInitializerContext::getRuleIndex() const {
-  return SimdDslParser::RuleLoopInitializer;
-}
-
-void SimdDslParser::LoopInitializerContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterLoopInitializer(this);
-}
-
-void SimdDslParser::LoopInitializerContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitLoopInitializer(this);
-}
-
-
-std::any SimdDslParser::LoopInitializerContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
-    return parserVisitor->visitLoopInitializer(this);
-  else
-    return visitor->visitChildren(this);
-}
-
-SimdDslParser::LoopInitializerContext* SimdDslParser::loopInitializer() {
-  LoopInitializerContext *_localctx = _tracker.createInstance<LoopInitializerContext>(_ctx, getState());
-  enterRule(_localctx, 22, SimdDslParser::RuleLoopInitializer);
-
-#if __cplusplus > 201703L
-  auto onExit = finally([=, this] {
-#else
-  auto onExit = finally([=] {
-#endif
-    exitRule();
-  });
-  try {
-    enterOuterAlt(_localctx, 1);
-    setState(125);
-    match(SimdDslParser::IDENTIFIER);
-    setState(126);
-    match(SimdDslParser::T__7);
-    setState(127);
-    expression();
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- ConditionContext ------------------------------------------------------------------
-
-SimdDslParser::ConditionContext::ConditionContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-tree::TerminalNode* SimdDslParser::ConditionContext::IDENTIFIER() {
-  return getToken(SimdDslParser::IDENTIFIER, 0);
-}
-
-SimdDslParser::ExpressionContext* SimdDslParser::ConditionContext::expression() {
-  return getRuleContext<SimdDslParser::ExpressionContext>(0);
-}
-
-
-size_t SimdDslParser::ConditionContext::getRuleIndex() const {
-  return SimdDslParser::RuleCondition;
-}
-
-void SimdDslParser::ConditionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterCondition(this);
-}
-
-void SimdDslParser::ConditionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitCondition(this);
-}
-
-
-std::any SimdDslParser::ConditionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
-    return parserVisitor->visitCondition(this);
-  else
-    return visitor->visitChildren(this);
-}
-
-SimdDslParser::ConditionContext* SimdDslParser::condition() {
-  ConditionContext *_localctx = _tracker.createInstance<ConditionContext>(_ctx, getState());
-  enterRule(_localctx, 24, SimdDslParser::RuleCondition);
-  size_t _la = 0;
-
-#if __cplusplus > 201703L
-  auto onExit = finally([=, this] {
-#else
-  auto onExit = finally([=] {
-#endif
-    exitRule();
-  });
-  try {
-    enterOuterAlt(_localctx, 1);
-    setState(129);
-    match(SimdDslParser::IDENTIFIER);
-    setState(130);
-    _la = _input->LA(1);
-    if (!((((_la & ~ 0x3fULL) == 0) &&
-      ((1ULL << _la) & 61440) != 0))) {
-    _errHandler->recoverInline(this);
-    }
-    else {
-      _errHandler->reportMatch(this);
-      consume();
-    }
-    setState(131);
-    expression();
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- LoopUpdateContext ------------------------------------------------------------------
-
-SimdDslParser::LoopUpdateContext::LoopUpdateContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-tree::TerminalNode* SimdDslParser::LoopUpdateContext::IDENTIFIER() {
-  return getToken(SimdDslParser::IDENTIFIER, 0);
-}
-
-SimdDslParser::ExpressionContext* SimdDslParser::LoopUpdateContext::expression() {
-  return getRuleContext<SimdDslParser::ExpressionContext>(0);
-}
-
-
-size_t SimdDslParser::LoopUpdateContext::getRuleIndex() const {
-  return SimdDslParser::RuleLoopUpdate;
-}
-
-void SimdDslParser::LoopUpdateContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterLoopUpdate(this);
-}
-
-void SimdDslParser::LoopUpdateContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitLoopUpdate(this);
-}
-
-
-std::any SimdDslParser::LoopUpdateContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
-    return parserVisitor->visitLoopUpdate(this);
-  else
-    return visitor->visitChildren(this);
-}
-
-SimdDslParser::LoopUpdateContext* SimdDslParser::loopUpdate() {
-  LoopUpdateContext *_localctx = _tracker.createInstance<LoopUpdateContext>(_ctx, getState());
-  enterRule(_localctx, 26, SimdDslParser::RuleLoopUpdate);
-
-#if __cplusplus > 201703L
-  auto onExit = finally([=, this] {
-#else
-  auto onExit = finally([=] {
-#endif
-    exitRule();
-  });
-  try {
-    setState(138);
-    _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 8, _ctx)) {
-    case 1: {
-      enterOuterAlt(_localctx, 1);
-      setState(133);
-      match(SimdDslParser::IDENTIFIER);
-      setState(134);
-      match(SimdDslParser::T__15);
-      break;
-    }
-
-    case 2: {
-      enterOuterAlt(_localctx, 2);
-      setState(135);
-      match(SimdDslParser::IDENTIFIER);
-      setState(136);
-      match(SimdDslParser::T__7);
-      setState(137);
-      expression();
-      break;
-    }
-
-    default:
-      break;
-    }
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- BlockContext ------------------------------------------------------------------
-
-SimdDslParser::BlockContext::BlockContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-std::vector<SimdDslParser::StatementContext *> SimdDslParser::BlockContext::statement() {
-  return getRuleContexts<SimdDslParser::StatementContext>();
-}
-
-SimdDslParser::StatementContext* SimdDslParser::BlockContext::statement(size_t i) {
-  return getRuleContext<SimdDslParser::StatementContext>(i);
-}
-
-
-size_t SimdDslParser::BlockContext::getRuleIndex() const {
-  return SimdDslParser::RuleBlock;
-}
-
-void SimdDslParser::BlockContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBlock(this);
-}
-
-void SimdDslParser::BlockContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBlock(this);
-}
-
-
-std::any SimdDslParser::BlockContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
-    return parserVisitor->visitBlock(this);
-  else
-    return visitor->visitChildren(this);
-}
-
-SimdDslParser::BlockContext* SimdDslParser::block() {
-  BlockContext *_localctx = _tracker.createInstance<BlockContext>(_ctx, getState());
-  enterRule(_localctx, 28, SimdDslParser::RuleBlock);
-  size_t _la = 0;
-
-#if __cplusplus > 201703L
-  auto onExit = finally([=, this] {
-#else
-  auto onExit = finally([=] {
-#endif
-    exitRule();
-  });
-  try {
-    enterOuterAlt(_localctx, 1);
-    setState(140);
-    match(SimdDslParser::T__1);
-    setState(144);
-    _errHandler->sync(this);
-    _la = _input->LA(1);
-    while ((((_la & ~ 0x3fULL) == 0) &&
-      ((1ULL << _la) & 2097858) != 0)) {
-      setState(141);
-      statement();
-      setState(146);
-      _errHandler->sync(this);
-      _la = _input->LA(1);
-    }
-    setState(147);
-    match(SimdDslParser::T__2);
    
   }
   catch (RecognitionException &e) {
@@ -1454,7 +1169,7 @@ std::any SimdDslParser::CallContext::accept(tree::ParseTreeVisitor *visitor) {
 
 SimdDslParser::CallContext* SimdDslParser::call() {
   CallContext *_localctx = _tracker.createInstance<CallContext>(_ctx, getState());
-  enterRule(_localctx, 30, SimdDslParser::RuleCall);
+  enterRule(_localctx, 24, SimdDslParser::RuleCall);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -1466,22 +1181,21 @@ SimdDslParser::CallContext* SimdDslParser::call() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(149);
+    setState(113);
     match(SimdDslParser::IDENTIFIER);
-    setState(150);
-    match(SimdDslParser::T__9);
-    setState(152);
+    setState(114);
+    match(SimdDslParser::T__11);
+    setState(116);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
-    if (_la == SimdDslParser::IDENTIFIER
-
-    || _la == SimdDslParser::INT) {
-      setState(151);
+    if ((((_la & ~ 0x3fULL) == 0) &&
+      ((1ULL << _la) & 790528) != 0)) {
+      setState(115);
       argList();
     }
-    setState(154);
-    match(SimdDslParser::T__10);
+    setState(118);
+    match(SimdDslParser::T__12);
    
   }
   catch (RecognitionException &e) {
@@ -1534,7 +1248,7 @@ std::any SimdDslParser::ArgListContext::accept(tree::ParseTreeVisitor *visitor) 
 
 SimdDslParser::ArgListContext* SimdDslParser::argList() {
   ArgListContext *_localctx = _tracker.createInstance<ArgListContext>(_ctx, getState());
-  enterRule(_localctx, 32, SimdDslParser::RuleArgList);
+  enterRule(_localctx, 26, SimdDslParser::RuleArgList);
   size_t _la = 0;
 
 #if __cplusplus > 201703L
@@ -1546,17 +1260,17 @@ SimdDslParser::ArgListContext* SimdDslParser::argList() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(156);
+    setState(120);
     arg();
-    setState(161);
+    setState(125);
     _errHandler->sync(this);
     _la = _input->LA(1);
-    while (_la == SimdDslParser::T__16) {
-      setState(157);
-      match(SimdDslParser::T__16);
-      setState(158);
+    while (_la == SimdDslParser::T__13) {
+      setState(121);
+      match(SimdDslParser::T__13);
+      setState(122);
       arg();
-      setState(163);
+      setState(127);
       _errHandler->sync(this);
       _la = _input->LA(1);
     }
@@ -1608,7 +1322,7 @@ std::any SimdDslParser::ArgContext::accept(tree::ParseTreeVisitor *visitor) {
 
 SimdDslParser::ArgContext* SimdDslParser::arg() {
   ArgContext *_localctx = _tracker.createInstance<ArgContext>(_ctx, getState());
-  enterRule(_localctx, 34, SimdDslParser::RuleArg);
+  enterRule(_localctx, 28, SimdDslParser::RuleArg);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -1619,8 +1333,8 @@ SimdDslParser::ArgContext* SimdDslParser::arg() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(164);
-    expression();
+    setState(128);
+    expression(0);
    
   }
   catch (RecognitionException &e) {
@@ -1638,79 +1352,293 @@ SimdDslParser::ExpressionContext::ExpressionContext(ParserRuleContext *parent, s
   : ParserRuleContext(parent, invokingState) {
 }
 
-SimdDslParser::LvalueContext* SimdDslParser::ExpressionContext::lvalue() {
-  return getRuleContext<SimdDslParser::LvalueContext>(0);
-}
-
-tree::TerminalNode* SimdDslParser::ExpressionContext::INT() {
-  return getToken(SimdDslParser::INT, 0);
-}
-
 
 size_t SimdDslParser::ExpressionContext::getRuleIndex() const {
   return SimdDslParser::RuleExpression;
 }
 
-void SimdDslParser::ExpressionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterExpression(this);
+void SimdDslParser::ExpressionContext::copyFrom(ExpressionContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
 }
 
-void SimdDslParser::ExpressionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitExpression(this);
+//----------------- LvalueExprContext ------------------------------------------------------------------
+
+SimdDslParser::LvalueContext* SimdDslParser::LvalueExprContext::lvalue() {
+  return getRuleContext<SimdDslParser::LvalueContext>(0);
 }
 
+SimdDslParser::LvalueExprContext::LvalueExprContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-std::any SimdDslParser::ExpressionContext::accept(tree::ParseTreeVisitor *visitor) {
+void SimdDslParser::LvalueExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterLvalueExpr(this);
+}
+void SimdDslParser::LvalueExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitLvalueExpr(this);
+}
+
+std::any SimdDslParser::LvalueExprContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
-    return parserVisitor->visitExpression(this);
+    return parserVisitor->visitLvalueExpr(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- CallExprContext ------------------------------------------------------------------
+
+SimdDslParser::CallContext* SimdDslParser::CallExprContext::call() {
+  return getRuleContext<SimdDslParser::CallContext>(0);
+}
+
+SimdDslParser::CallExprContext::CallExprContext(ExpressionContext *ctx) { copyFrom(ctx); }
+
+void SimdDslParser::CallExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterCallExpr(this);
+}
+void SimdDslParser::CallExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitCallExpr(this);
+}
+
+std::any SimdDslParser::CallExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
+    return parserVisitor->visitCallExpr(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- IntExprContext ------------------------------------------------------------------
+
+tree::TerminalNode* SimdDslParser::IntExprContext::INT() {
+  return getToken(SimdDslParser::INT, 0);
+}
+
+SimdDslParser::IntExprContext::IntExprContext(ExpressionContext *ctx) { copyFrom(ctx); }
+
+void SimdDslParser::IntExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterIntExpr(this);
+}
+void SimdDslParser::IntExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitIntExpr(this);
+}
+
+std::any SimdDslParser::IntExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
+    return parserVisitor->visitIntExpr(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- ParenExprContext ------------------------------------------------------------------
+
+SimdDslParser::ExpressionContext* SimdDslParser::ParenExprContext::expression() {
+  return getRuleContext<SimdDslParser::ExpressionContext>(0);
+}
+
+SimdDslParser::ParenExprContext::ParenExprContext(ExpressionContext *ctx) { copyFrom(ctx); }
+
+void SimdDslParser::ParenExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterParenExpr(this);
+}
+void SimdDslParser::ParenExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitParenExpr(this);
+}
+
+std::any SimdDslParser::ParenExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
+    return parserVisitor->visitParenExpr(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- AddSubExprContext ------------------------------------------------------------------
+
+std::vector<SimdDslParser::ExpressionContext *> SimdDslParser::AddSubExprContext::expression() {
+  return getRuleContexts<SimdDslParser::ExpressionContext>();
+}
+
+SimdDslParser::ExpressionContext* SimdDslParser::AddSubExprContext::expression(size_t i) {
+  return getRuleContext<SimdDslParser::ExpressionContext>(i);
+}
+
+SimdDslParser::AddSubExprContext::AddSubExprContext(ExpressionContext *ctx) { copyFrom(ctx); }
+
+void SimdDslParser::AddSubExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterAddSubExpr(this);
+}
+void SimdDslParser::AddSubExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitAddSubExpr(this);
+}
+
+std::any SimdDslParser::AddSubExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
+    return parserVisitor->visitAddSubExpr(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- DecrementExprContext ------------------------------------------------------------------
+
+SimdDslParser::LvalueContext* SimdDslParser::DecrementExprContext::lvalue() {
+  return getRuleContext<SimdDslParser::LvalueContext>(0);
+}
+
+SimdDslParser::DecrementExprContext::DecrementExprContext(ExpressionContext *ctx) { copyFrom(ctx); }
+
+void SimdDslParser::DecrementExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterDecrementExpr(this);
+}
+void SimdDslParser::DecrementExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<SimdDslListener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitDecrementExpr(this);
+}
+
+std::any SimdDslParser::DecrementExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<SimdDslVisitor*>(visitor))
+    return parserVisitor->visitDecrementExpr(this);
   else
     return visitor->visitChildren(this);
 }
 
 SimdDslParser::ExpressionContext* SimdDslParser::expression() {
-  ExpressionContext *_localctx = _tracker.createInstance<ExpressionContext>(_ctx, getState());
-  enterRule(_localctx, 36, SimdDslParser::RuleExpression);
+   return expression(0);
+}
+
+SimdDslParser::ExpressionContext* SimdDslParser::expression(int precedence) {
+  ParserRuleContext *parentContext = _ctx;
+  size_t parentState = getState();
+  SimdDslParser::ExpressionContext *_localctx = _tracker.createInstance<ExpressionContext>(_ctx, parentState);
+  SimdDslParser::ExpressionContext *previousContext = _localctx;
+  (void)previousContext; // Silence compiler, in case the context is not used by generated code.
+  size_t startState = 30;
+  enterRecursionRule(_localctx, 30, SimdDslParser::RuleExpression, precedence);
+
+    size_t _la = 0;
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
 #else
   auto onExit = finally([=] {
 #endif
-    exitRule();
+    unrollRecursionContexts(parentContext);
   });
   try {
-    setState(168);
+    size_t alt;
+    enterOuterAlt(_localctx, 1);
+    setState(141);
     _errHandler->sync(this);
-    switch (_input->LA(1)) {
-      case SimdDslParser::IDENTIFIER: {
-        enterOuterAlt(_localctx, 1);
-        setState(166);
-        lvalue();
-        break;
-      }
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 10, _ctx)) {
+    case 1: {
+      _localctx = _tracker.createInstance<ParenExprContext>(_localctx);
+      _ctx = _localctx;
+      previousContext = _localctx;
 
-      case SimdDslParser::INT: {
-        enterOuterAlt(_localctx, 2);
-        setState(167);
-        match(SimdDslParser::INT);
-        break;
-      }
+      setState(131);
+      match(SimdDslParser::T__11);
+      setState(132);
+      expression(0);
+      setState(133);
+      match(SimdDslParser::T__12);
+      break;
+    }
+
+    case 2: {
+      _localctx = _tracker.createInstance<DecrementExprContext>(_localctx);
+      _ctx = _localctx;
+      previousContext = _localctx;
+      setState(135);
+      lvalue();
+      setState(136);
+      antlrcpp::downCast<DecrementExprContext *>(_localctx)->op = match(SimdDslParser::T__10);
+      break;
+    }
+
+    case 3: {
+      _localctx = _tracker.createInstance<CallExprContext>(_localctx);
+      _ctx = _localctx;
+      previousContext = _localctx;
+      setState(138);
+      call();
+      break;
+    }
+
+    case 4: {
+      _localctx = _tracker.createInstance<LvalueExprContext>(_localctx);
+      _ctx = _localctx;
+      previousContext = _localctx;
+      setState(139);
+      lvalue();
+      break;
+    }
+
+    case 5: {
+      _localctx = _tracker.createInstance<IntExprContext>(_localctx);
+      _ctx = _localctx;
+      previousContext = _localctx;
+      setState(140);
+      match(SimdDslParser::INT);
+      break;
+    }
 
     default:
-      throw NoViableAltException(this);
+      break;
     }
-   
+    _ctx->stop = _input->LT(-1);
+    setState(148);
+    _errHandler->sync(this);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 11, _ctx);
+    while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
+      if (alt == 1) {
+        if (!_parseListeners.empty())
+          triggerExitRuleEvent();
+        previousContext = _localctx;
+        auto newContext = _tracker.createInstance<AddSubExprContext>(_tracker.createInstance<ExpressionContext>(parentContext, parentState));
+        _localctx = newContext;
+        pushNewRecursionContext(newContext, startState, RuleExpression);
+        setState(143);
+
+        if (!(precpred(_ctx, 4))) throw FailedPredicateException(this, "precpred(_ctx, 4)");
+        setState(144);
+        antlrcpp::downCast<AddSubExprContext *>(_localctx)->op = _input->LT(1);
+        _la = _input->LA(1);
+        if (!(_la == SimdDslParser::T__14
+
+        || _la == SimdDslParser::T__15)) {
+          antlrcpp::downCast<AddSubExprContext *>(_localctx)->op = _errHandler->recoverInline(this);
+        }
+        else {
+          _errHandler->reportMatch(this);
+          consume();
+        }
+        setState(145);
+        expression(5); 
+      }
+      setState(150);
+      _errHandler->sync(this);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 11, _ctx);
+    }
   }
   catch (RecognitionException &e) {
     _errHandler->reportError(this, e);
     _localctx->exception = std::current_exception();
     _errHandler->recover(this, _localctx->exception);
   }
-
   return _localctx;
 }
 
@@ -1726,14 +1654,6 @@ std::vector<tree::TerminalNode *> SimdDslParser::LvalueContext::IDENTIFIER() {
 
 tree::TerminalNode* SimdDslParser::LvalueContext::IDENTIFIER(size_t i) {
   return getToken(SimdDslParser::IDENTIFIER, i);
-}
-
-std::vector<SimdDslParser::ExpressionContext *> SimdDslParser::LvalueContext::expression() {
-  return getRuleContexts<SimdDslParser::ExpressionContext>();
-}
-
-SimdDslParser::ExpressionContext* SimdDslParser::LvalueContext::expression(size_t i) {
-  return getRuleContext<SimdDslParser::ExpressionContext>(i);
 }
 
 
@@ -1763,8 +1683,7 @@ std::any SimdDslParser::LvalueContext::accept(tree::ParseTreeVisitor *visitor) {
 
 SimdDslParser::LvalueContext* SimdDslParser::lvalue() {
   LvalueContext *_localctx = _tracker.createInstance<LvalueContext>(_ctx, getState());
-  enterRule(_localctx, 38, SimdDslParser::RuleLvalue);
-  size_t _la = 0;
+  enterRule(_localctx, 32, SimdDslParser::RuleLvalue);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -1775,42 +1694,12 @@ SimdDslParser::LvalueContext* SimdDslParser::lvalue() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(170);
+    setState(151);
     match(SimdDslParser::IDENTIFIER);
-    setState(179);
-    _errHandler->sync(this);
-    _la = _input->LA(1);
-    while (_la == SimdDslParser::T__17
-
-    || _la == SimdDslParser::T__18) {
-      setState(177);
-      _errHandler->sync(this);
-      switch (_input->LA(1)) {
-        case SimdDslParser::T__17: {
-          setState(171);
-          match(SimdDslParser::T__17);
-          setState(172);
-          match(SimdDslParser::IDENTIFIER);
-          break;
-        }
-
-        case SimdDslParser::T__18: {
-          setState(173);
-          match(SimdDslParser::T__18);
-          setState(174);
-          expression();
-          setState(175);
-          match(SimdDslParser::T__19);
-          break;
-        }
-
-      default:
-        throw NoViableAltException(this);
-      }
-      setState(181);
-      _errHandler->sync(this);
-      _la = _input->LA(1);
-    }
+    setState(152);
+    match(SimdDslParser::T__16);
+    setState(153);
+    match(SimdDslParser::IDENTIFIER);
    
   }
   catch (RecognitionException &e) {
@@ -1820,6 +1709,26 @@ SimdDslParser::LvalueContext* SimdDslParser::lvalue() {
   }
 
   return _localctx;
+}
+
+bool SimdDslParser::sempred(RuleContext *context, size_t ruleIndex, size_t predicateIndex) {
+  switch (ruleIndex) {
+    case 15: return expressionSempred(antlrcpp::downCast<ExpressionContext *>(context), predicateIndex);
+
+  default:
+    break;
+  }
+  return true;
+}
+
+bool SimdDslParser::expressionSempred(ExpressionContext *_localctx, size_t predicateIndex) {
+  switch (predicateIndex) {
+    case 0: return precpred(_ctx, 4);
+
+  default:
+    break;
+  }
+  return true;
 }
 
 void SimdDslParser::initialize() {

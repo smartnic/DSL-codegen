@@ -1,0 +1,3 @@
+/home/kunal/Documents/antlr/build/CMakeFiles/generate_c.dir
+/home/kunal/Documents/antlr/build/CMakeFiles/edit_cache.dir
+/home/kunal/Documents/antlr/build/CMakeFiles/rebuild_cache.dir

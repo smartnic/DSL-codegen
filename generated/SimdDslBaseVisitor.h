@@ -51,27 +51,15 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitCompoundAssignment(SimdDslParser::CompoundAssignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitUpdateStatement(SimdDslParser::UpdateStatementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitCallStatement(SimdDslParser::CallStatementContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitForStatement(SimdDslParser::ForStatementContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitLoopInitializer(SimdDslParser::LoopInitializerContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitCondition(SimdDslParser::ConditionContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitLoopUpdate(SimdDslParser::LoopUpdateContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitBlock(SimdDslParser::BlockContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -87,7 +75,27 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitExpression(SimdDslParser::ExpressionContext *ctx) override {
+  virtual std::any visitLvalueExpr(SimdDslParser::LvalueExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitCallExpr(SimdDslParser::CallExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitIntExpr(SimdDslParser::IntExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitParenExpr(SimdDslParser::ParenExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitAddSubExpr(SimdDslParser::AddSubExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitDecrementExpr(SimdDslParser::DecrementExprContext *ctx) override {
     return visitChildren(ctx);
   }
 

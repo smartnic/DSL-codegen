@@ -1,10 +1,13 @@
 #include "SimdDslCodeGenerator.h"
 
+#include <algorithm>
 #include <any>
-#include <regex>
 #include <stdexcept>
+#include <vector>
 
 namespace {
+
+using Parser = SimdDslParser;
 
 int elementBits(const std::string &typeName) {
     if (typeName == "int8" || typeName == "uint8") return 8;
@@ -14,47 +17,189 @@ int elementBits(const std::string &typeName) {
     throw std::runtime_error("unsupported vector element type: " + typeName);
 }
 
-std::string cType(int bits) {
-    return "uint" + std::to_string(bits) + "_t";
-}
-
-std::string vectorType(int registerBits) {
-    return registerBits == 256 ? "__m256i" : "__m128i";
-}
-
-std::string intrinsicPrefix(int registerBits) {
-    return registerBits == 256 ? "_mm256" : "_mm";
-}
-
-std::string intrinsicSuffix(int bits) {
-    return "epi" + std::to_string(bits);
-}
-
 void validateTarget(int registerBits, int bits) {
-    if (registerBits != 128 && registerBits != 256) {
+    if (registerBits != 128 && registerBits != 256)
         throw std::runtime_error("vector_width must be 128 or 256 for AVX2");
-    }
-    if (bits != 8 && bits != 16 && bits != 32 && bits != 64) {
+    if (bits != 8 && bits != 16 && bits != 32 && bits != 64)
         throw std::runtime_error("vector element width must be 8, 16, 32, or 64 bits");
-    }
-    if (registerBits % bits != 0) {
+    if (registerBits % bits != 0)
         throw std::runtime_error("register width must be divisible by element width");
-    }
 }
+
+struct Binary {
+    std::string op;  // "+" or "-"
+    Parser::ExpressionContext *lhs;
+    Parser::ExpressionContext *rhs;
+};
+
+// Normalizes both `a + b` and the legacy add(a, b) / sub(a, b) / decrement(a, n).
+Binary asBinary(Parser::ExpressionContext *e) {
+    if (auto *a = dynamic_cast<Parser::AddSubExprContext *>(e)) {
+        return {a->op->getText(), a->expression(0), a->expression(1)};
+    }
+    if (auto *c = dynamic_cast<Parser::CallExprContext *>(e)) {
+        const std::string name = c->call()->IDENTIFIER()->getText();
+        std::vector<Parser::ArgContext *> args;
+        if (c->call()->argList() != nullptr) args = c->call()->argList()->arg();
+        if ((name == "add" || name == "sub" || name == "decrement") && args.size() == 2) {
+            return {name == "add" ? "+" : "-", args[0]->expression(), args[1]->expression()};
+        }
+        throw std::runtime_error("unsupported primitive or wrong argument count: " + name);
+    }
+    throw std::runtime_error("unsupported expression: " + e->getText());
+}
+
+// Lowers one per-packet statement into a SIMD loop in process_packets.
+class Kernel {
+public:
+    Kernel(int registerBits, const std::map<std::string, int> &fieldBits)
+        : registerBits_(registerBits), fieldBits_(fieldBits) {}
+
+    // Returns the field name of packet.field and records it as an input.
+    std::string fieldOf(Parser::LvalueContext *lv) {
+        if (lv->IDENTIFIER().size() != 2) {
+            throw std::runtime_error("expected packet.field as a vector operand: " +
+                                     lv->getText());
+        }
+        const std::string field = lv->IDENTIFIER(1)->getText();
+        const auto it = fieldBits_.find(field);
+        if (it == fieldBits_.end())
+            throw std::runtime_error("vector field is not declared: " + field);
+        if (bits_ == 0) bits_ = it->second;
+        else if (bits_ != it->second)
+            throw std::runtime_error("operands must have the same element width");
+        if (std::find(inputs_.begin(), inputs_.end(), field) == inputs_.end())
+            inputs_.push_back(field);
+        return field;
+    }
+
+    void scan(Parser::ExpressionContext *e) {
+        if (auto *p = dynamic_cast<Parser::ParenExprContext *>(e)) {
+            scan(p->expression());
+        } else if (auto *l = dynamic_cast<Parser::LvalueExprContext *>(e)) {
+            fieldOf(l->lvalue());
+        } else if (dynamic_cast<Parser::IntExprContext *>(e) != nullptr) {
+            // constants adopt the width of the vector operands
+        } else if (auto *d = dynamic_cast<Parser::DecrementExprContext *>(e)) {
+            fieldOf(d->lvalue());
+        } else {
+            const Binary b = asBinary(e);
+            scan(b.lhs);
+            scan(b.rhs);
+        }
+    }
+
+    std::string simd(Parser::ExpressionContext *e) {
+        if (auto *p = dynamic_cast<Parser::ParenExprContext *>(e)) return simd(p->expression());
+        if (auto *l = dynamic_cast<Parser::LvalueExprContext *>(e)) return load(fieldOf(l->lvalue()));
+        if (auto *i = dynamic_cast<Parser::IntExprContext *>(e)) return set1(i->INT()->getText());
+        if (auto *d = dynamic_cast<Parser::DecrementExprContext *>(e))
+            return binarySimd("-", load(fieldOf(d->lvalue())), set1("1"));
+        const Binary b = asBinary(e);
+        return binarySimd(b.op, simd(b.lhs), simd(b.rhs));
+    }
+
+    std::string scalar(Parser::ExpressionContext *e) {
+        if (auto *p = dynamic_cast<Parser::ParenExprContext *>(e)) return scalar(p->expression());
+        if (auto *l = dynamic_cast<Parser::LvalueExprContext *>(e)) return fieldOf(l->lvalue()) + "[i]";
+        if (auto *i = dynamic_cast<Parser::IntExprContext *>(e)) return i->INT()->getText();
+        if (auto *d = dynamic_cast<Parser::DecrementExprContext *>(e))
+            return binaryScalar("-", fieldOf(d->lvalue()) + "[i]", "1");
+        const Binary b = asBinary(e);
+        return binaryScalar(b.op, scalar(b.lhs), scalar(b.rhs));
+    }
+
+    std::string load(const std::string &field) const {
+        return prefix() + "_loadu_si" + std::to_string(registerBits_) + "((const " +
+               vectorType() + " *) (" + field + " + i))";
+    }
+
+    std::string binarySimd(const std::string &op, const std::string &l,
+                           const std::string &r) const {
+        return prefix() + (op == "+" ? "_add_" : "_sub_") + suffix() + "(" + l + ", " + r + ")";
+    }
+
+    std::string binaryScalar(const std::string &op, const std::string &l,
+                             const std::string &r) const {
+        return "(" + scalarType() + ")(" + l + " " + op + " " + r + ")";
+    }
+
+    std::string one() const { return set1("1"); }
+
+    // Emits a complete vector loop plus its scalar tail for one statement.
+    std::string emit(const std::string &outName,
+                     const std::string &simdValue, const std::string &scalarValue) {
+        if (bits_ == 0)
+            throw std::runtime_error("expression has no vector operand");
+        validateTarget(registerBits_, bits_);
+
+        std::string out = "    {\n";
+        out += "        const int LANES = " + std::to_string(registerBits_ / bits_) + ";\n";
+        out += "        int i = 0;\n";
+        out += "        for (; i + LANES <= n; i += LANES) {\n";
+        out += "            " + vectorType() + " v = " + simdValue + ";\n";
+        out += "            " + prefix() + "_storeu_si" + std::to_string(registerBits_) + "((" +
+               vectorType() + " *) (" + outName + " + i), v);\n";
+        out += "        }\n";
+        out += "        for (; i < n; i++) {\n";
+        out += "            " + outName + "[i] = " + scalarValue + ";\n";
+        out += "        }\n";
+        out += "    }\n";
+        return out;
+    }
+
+    const std::vector<std::string> &inputs() const { return inputs_; }
+    int bits() const { return bits_; }
+
+private:
+    std::string prefix() const { return registerBits_ == 256 ? "_mm256" : "_mm"; }
+    std::string vectorType() const { return registerBits_ == 256 ? "__m256i" : "__m128i"; }
+    std::string suffix() const { return "epi" + std::to_string(bits_); }
+    std::string scalarType() const { return "uint" + std::to_string(bits_) + "_t"; }
+    std::string set1(const std::string &value) const {
+        // the 64-bit broadcast intrinsic is spelled set1_epi64x
+        return prefix() + "_set1_" + suffix() + (bits_ == 64 ? "x" : "") + "(" + value + ")";
+    }
+
+    int registerBits_;
+    int bits_ = 0;
+    const std::map<std::string, int> &fieldBits_;
+    std::vector<std::string> inputs_;
+};
 
 }  // namespace
 
 std::any SimdDslCodeGenerator::visitProgram(SimdDslParser::ProgramContext *ctx) {
+    code_ = "#include <immintrin.h>\n#include <stdint.h>\n\n";
     visitChildren(ctx);
+
+    if (fieldBits_.empty())
+        throw std::runtime_error("the DSL program must start with a packet struct containing vector fields");
+
+    if (maxElementBits_ != 0) {
+        code_ += "// The widest element type is " + std::to_string(maxElementBits_) +
+                 " bits, so a " + std::to_string(registerBits_) + "-bit register has " +
+                 std::to_string(registerBits_ / maxElementBits_) + " maximum-width lanes.\n";
+    }
+    code_ += "void process_packets(";
+    bool first = true;
+    for (const auto &[name, bits] : parameterBits_) {
+        if (!first) code_ += ", ";
+        code_ += "uint" + std::to_string(bits) + "_t *" + name;
+        first = false;
+    }
+    if (!first) code_ += ", ";
+    code_ += "int n) {\n";
+    code_ += body_;
+    code_ += "}\n";
     return code_;
 }
 
 std::any SimdDslCodeGenerator::visitVectorWidthDeclaration(
     SimdDslParser::VectorWidthDeclarationContext *ctx) {
     registerBits_ = std::stoi(ctx->INT()->getText());
-    if (registerBits_ != 128 && registerBits_ != 256) {
+    if (registerBits_ != 128 && registerBits_ != 256)
         throw std::runtime_error("vector_width must be 128 or 256 for AVX2");
-    }
     return {};
 }
 
@@ -69,104 +214,56 @@ std::any SimdDslCodeGenerator::visitStructDeclaration(
     return {};
 }
 
-std::any SimdDslCodeGenerator::visitForStatement(
-    SimdDslParser::ForStatementContext *ctx) {
-    code_ += "#include <immintrin.h>\n";
-    code_ += "#include <stdint.h>\n\n";
-    visit(ctx->block());
+std::any SimdDslCodeGenerator::visitDeclaration(
+    SimdDslParser::DeclarationContext *ctx) {
+    if (ctx->expression() == nullptr) return {};  // plain declaration, no code
+
+    const std::string dest = ctx->IDENTIFIER()->getText();
+    Kernel k(registerBits_, fieldBits_);
+    k.scan(ctx->expression());
+    const std::string out = "out_" + dest;
+    body_ += k.emit(out, k.simd(ctx->expression()), k.scalar(ctx->expression()));
+    for (const auto &input : k.inputs()) parameterBits_[input] = k.bits();
+    parameterBits_[out] = k.bits();
+    maxElementBits_ = std::max(maxElementBits_, k.bits());
     return {};
 }
 
-std::any SimdDslCodeGenerator::visitDeclaration(
-    SimdDslParser::DeclarationContext *ctx) {
-    if (ctx->call() == nullptr) {
-      
-std::any SimdDslCodeGenerator::visitDeclaration(
-    SimdDslParser::DeclarationContext *ctx) {
-    if (ctx->call() == nullptr) {
-        throw std::runtime_error("vector declarations require a supported primitive call");
-    }  throw std::runtime_error("vector declarations require a supported primitive call");
-    }
+std::any SimdDslCodeGenerator::visitAssignment(
+    SimdDslParser::AssignmentContext *ctx) {
+    Kernel k(registerBits_, fieldBits_);
+    const std::string target = k.fieldOf(ctx->lvalue());
+    k.scan(ctx->expression());
+    body_ += k.emit(target, k.simd(ctx->expression()), k.scalar(ctx->expression()));
+    for (const auto &input : k.inputs()) parameterBits_[input] = k.bits();
+    parameterBits_[target] = k.bits();
+    maxElementBits_ = std::max(maxElementBits_, k.bits());
+    return {};
+}
 
-    auto *arguments = ctx->call()->argList();
-    const std::string operation = ctx->call()->IDENTIFIER()->getText();
-    if (arguments == nullptr ||
-        ((operation == "decrement" && arguments->arg().size() != 2) ||
-         (operation == "add" && arguments->arg().size() != 2))) {
-        throw std::runtime_error(operation + " requires two arguments");
-    }
-    if (operation != "decrement" && operation != "add") {
-        throw std::runtime_error("unsupported primitive: " + operation);
-    }
+std::any SimdDslCodeGenerator::visitCompoundAssignment(
+    SimdDslParser::CompoundAssignmentContext *ctx) {
+    Kernel k(registerBits_, fieldBits_);
+    const std::string target = k.fieldOf(ctx->lvalue());
+    const std::string op = ctx->op->getText() == "+=" ? "+" : "-";
+    k.scan(ctx->expression());
+    body_ += k.emit(target, k.binarySimd(op, k.load(target), k.simd(ctx->expression())),
+                    k.binaryScalar(op, target + "[i]", k.scalar(ctx->expression())));
+    for (const auto &input : k.inputs()) parameterBits_[input] = k.bits();
+    parameterBits_[target] = k.bits();
+    maxElementBits_ = std::max(maxElementBits_, k.bits());
+    return {};
+}
 
-    const std::string input = arguments->arg(0)->getText();
-    std::smatch match;
-    const std::regex indexedField(
-        R"(^([A-Za-z_][A-Za-z_0-9]*)\[([A-Za-z_][A-Za-z_0-9]*)\]\.([A-Za-z_][A-Za-z_0-9]*)$)");
-    if (!std::regex_match(input, match, indexedField)) {
-        throw std::runtime_error("expected packet[index].field as a vector argument");
-    }
-
-    const std::string field = match[3].str();
-    const auto fieldType = fieldBits_.find(field);
-    if (fieldType == fieldBits_.end()) {
-        throw std::runtime_error("vector field is not declared: " + field);
-    }
-    const int bits = fieldType->second;
-    validateTarget(registerBits_, bits);
-    const int lanes = registerBits_ / bits;
-    const std::string prefix = intrinsicPrefix(registerBits_);
-    const std::string suffix = intrinsicSuffix(bits);
-    const std::string simdType = vectorType(registerBits_);
-    const std::string scalarType = cType(bits);
-    const std::string destination = ctx->IDENTIFIER()->getText();
-    const std::string functionName = operation + "_" + destination;
-    const std::string loadIntrinsic = prefix + "_loadu_si" + std::to_string(registerBits_);
-    const std::string storeIntrinsic = prefix + "_storeu_si" + std::to_string(registerBits_);
-
-    code_ += "#define LANES " + std::to_string(lanes) + "\n\n";
-    if (operation == "decrement") {
-        code_ += "void " + functionName + "(" + scalarType + " *" + field + ", int n) {\n";
-    } else {
-        code_ += "void " + functionName + "(" + scalarType + " *lhs, " + scalarType +
-            " *rhs, " + scalarType + " *" + destination + ", int n) {\n";
-    }
-    if (operation == "decrement") {
-        if (arguments->arg(1)->getText() != "1") {
-            throw std::runtime_error("decrement currently requires an amount of 1");
-        }
-        code_ += "    " + simdType + " one = " + prefix + "_set1_" + suffix + "(1);\n\n";
-    }
-    code_ += "    int i = 0;\n";
-    code_ += "    for (; i + LANES <= n; i += LANES) {\n";
-    const std::string leftName = operation == "decrement" ? field : "lhs";
-    code_ += "        " + simdType + " v = " + loadIntrinsic + "((const " +
-        simdType + " *) (" + leftName + " + i));\n";
-    if (operation == "decrement") {
-        code_ += "        v = " + prefix + "_sub_" + suffix + "(v, one);\n";
-    } else {
-        const std::string second = arguments->arg(1)->getText();
-        std::smatch secondMatch;
-        if (!std::regex_match(second, secondMatch, indexedField) ||
-            fieldBits_[secondMatch[3].str()] != bits) {
-            throw std::runtime_error("add arguments must be matching vector fields");
-        }
-        code_ += "        " + simdType + " rhs_v = " + loadIntrinsic + "((const " +
-            simdType + " *) (rhs + i));\n";
-        code_ += "        v = " + prefix + "_add_" + suffix + "(v, rhs_v);\n";
-    }
-    const std::string outputName = operation == "decrement" ? field : destination;
-    code_ += "        " + storeIntrinsic + "((" + simdType + " *) (" + outputName +
-        " + i), v);\n";
-    code_ += "    }\n\n";
-    code_ += "    for (; i < n; i++) {\n";
-        if (operation == "decrement") {
-            code_ += "        " + field + "[i]--;\n";
-        } else {
-            code_ += "        " + destination + "[i] = lhs[i] + rhs[i];\n";
-        }
-    code_ += "    }\n";
-    code_ += "}\n";
+std::any SimdDslCodeGenerator::visitUpdateStatement(
+    SimdDslParser::UpdateStatementContext *ctx) {
+    Kernel k(registerBits_, fieldBits_);
+    const std::string target = k.fieldOf(ctx->lvalue());
+    body_ += k.emit(target, k.binarySimd("-", k.load(target), k.one()),
+                    k.binaryScalar("-", target + "[i]", "1"));
+    for (const auto &input : k.inputs()) parameterBits_[input] = k.bits();
+    parameterBits_[target] = k.bits();
+    maxElementBits_ = std::max(maxElementBits_, k.bits());
     return {};
 }
 

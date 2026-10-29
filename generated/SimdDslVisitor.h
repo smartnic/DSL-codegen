@@ -37,17 +37,11 @@ public:
 
     virtual std::any visitAssignment(SimdDslParser::AssignmentContext *context) = 0;
 
+    virtual std::any visitCompoundAssignment(SimdDslParser::CompoundAssignmentContext *context) = 0;
+
+    virtual std::any visitUpdateStatement(SimdDslParser::UpdateStatementContext *context) = 0;
+
     virtual std::any visitCallStatement(SimdDslParser::CallStatementContext *context) = 0;
-
-    virtual std::any visitForStatement(SimdDslParser::ForStatementContext *context) = 0;
-
-    virtual std::any visitLoopInitializer(SimdDslParser::LoopInitializerContext *context) = 0;
-
-    virtual std::any visitCondition(SimdDslParser::ConditionContext *context) = 0;
-
-    virtual std::any visitLoopUpdate(SimdDslParser::LoopUpdateContext *context) = 0;
-
-    virtual std::any visitBlock(SimdDslParser::BlockContext *context) = 0;
 
     virtual std::any visitCall(SimdDslParser::CallContext *context) = 0;
 
@@ -55,7 +49,17 @@ public:
 
     virtual std::any visitArg(SimdDslParser::ArgContext *context) = 0;
 
-    virtual std::any visitExpression(SimdDslParser::ExpressionContext *context) = 0;
+    virtual std::any visitLvalueExpr(SimdDslParser::LvalueExprContext *context) = 0;
+
+    virtual std::any visitCallExpr(SimdDslParser::CallExprContext *context) = 0;
+
+    virtual std::any visitIntExpr(SimdDslParser::IntExprContext *context) = 0;
+
+    virtual std::any visitParenExpr(SimdDslParser::ParenExprContext *context) = 0;
+
+    virtual std::any visitAddSubExpr(SimdDslParser::AddSubExprContext *context) = 0;
+
+    virtual std::any visitDecrementExpr(SimdDslParser::DecrementExprContext *context) = 0;
 
     virtual std::any visitLvalue(SimdDslParser::LvalueContext *context) = 0;
 
