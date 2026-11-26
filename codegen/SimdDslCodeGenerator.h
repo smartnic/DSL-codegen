@@ -26,6 +26,7 @@ private:
     int maxElementBits_ = 0;
     std::map<std::string, int> fieldBits_;
     std::map<std::string, int> parameterBits_;
-    std::string body_;
+    std::string scalarBody_;
+    std::string simdBody_;
     std::string code_;
 };
